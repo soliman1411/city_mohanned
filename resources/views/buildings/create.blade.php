@@ -9,19 +9,18 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">خريطة تحديد الموقع</div>
                 <div class="card-body">
-                    <div id="map" style="height: 400px;">
+                    <div id="map" style="height: 400px;"></div>
 
-                    </div>
-                    <form id="location-form" class="mt-3">
+                    <div class="mt-3">
                         <div class="mb-3">
                             <label for="latitude" class="form-label">خط العرض</label>
-                            <input type="text" class="form-control" id="latitude" name="latitude" >
+                            <input type="text" class="form-control" id="latitude" disabled>
                         </div>
                         <div class="mb-3">
                             <label for="longitude" class="form-label">خط الطول</label>
-                            <input type="text" class="form-control" id="longitude" name="longitude" >
+                            <input type="text" class="form-control" id="longitude" disabled>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,6 +32,7 @@
                     <form method="POST" action="{{ route('buildings.store') }}">
                         @csrf
 
+                        <!-- الإحداثيات الحقيقية المرسلة -->
                         <input type="hidden" name="latitude" id="form-latitude">
                         <input type="hidden" name="longitude" id="form-longitude">
 
@@ -81,42 +81,33 @@
 
 @push('scripts')
 <script>
-    // Initialize the map
-    var map = L.map('map').setView([24.7136, 46.6753], 12); // مركز الرياض
+    var map = L.map('map').setView([24.7136, 46.6753], 12);
 
-    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Add a marker that can be dragged
     var marker = L.marker([24.7136, 46.6753], {
         draggable: true
     }).addTo(map);
 
-    // Update the form fields when the marker is moved
-    marker.on('dragend', function(e) {
-        var latlng = marker.getLatLng();
+    function updateCoords(latlng) {
         document.getElementById('latitude').value = latlng.lat;
         document.getElementById('longitude').value = latlng.lng;
         document.getElementById('form-latitude').value = latlng.lat;
         document.getElementById('form-longitude').value = latlng.lng;
+    }
+
+    marker.on('dragend', function(e) {
+        updateCoords(marker.getLatLng());
     });
 
-    // Also allow clicking on the map to move the marker
     map.on('click', function(e) {
         marker.setLatLng(e.latlng);
-        document.getElementById('latitude').value = e.latlng.lat;
-        document.getElementById('longitude').value = e.latlng.lng;
-        document.getElementById('form-latitude').value = e.latlng.lat;
-        document.getElementById('form-longitude').value = e.latlng.lng;
+        updateCoords(e.latlng);
     });
 
-    // Initialize the form fields
-    document.getElementById('latitude').value = marker.getLatLng().lat;
-    document.getElementById('longitude').value = marker.getLatLng().lng;
-    document.getElementById('form-latitude').value = marker.getLatLng().lat;
-    document.getElementById('form-longitude').value = marker.getLatLng().lng;
+    updateCoords(marker.getLatLng());
 </script>
 @endpush
 @endsection

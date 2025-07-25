@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('landmarks', function (Blueprint $table) {
-             $table->id();
+    $table->id();
     $table->string('name');
-    $table->decimal('location');
-    $table->string('type'); // حديقة، مدرسة، مستشفى
+    $table->decimal('latitude', 10, 8);   // خط العرض
+    $table->decimal('longitude', 11, 8);  // خط الطول
+    $table->string('type');               // مثل: ثقافي، ديني، تاريخي...
     $table->text('description')->nullable();
     $table->timestamps();
-        });
+});
     }
 
     /**

@@ -20,23 +20,28 @@ class LandmarkController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'type' => 'required',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string',
+        'latitude' => 'required|numeric',
+        'longitude' => 'required|numeric',
+        'type' => 'required|string',
+        'description' => 'nullable|string',
+    ]);
 
-        Landmark::create([
-            'name' => $request->name,
-            'location' => $request->latitude . ', ' . $request->longitude,
-            'type' => $request->type,
-            'description' => $request->description,
-        ]);
+    Landmark::create([
+        'name' => $request->name,
+        'latitude' => $request->latitude,
+        'longitude' => $request->longitude,
+        'type' => $request->type,
+        'description' => $request->description,
+    ]);
 
-        return redirect()->route('landmarks.index')->with('success', 'تم إضافة المعلم بنجاح');
-    }
+    return redirect()->route('landmarks.index')->with('success', 'تمت إضافة المعلم بنجاح');
+}
+
+
+    
 
     public function edit(Landmark $landmark)
     {

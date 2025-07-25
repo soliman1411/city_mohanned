@@ -1,3 +1,5 @@
+@extends('layouts.app')
+
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -10,8 +12,7 @@
             <div class="card">
                 <div class="card-header bg-secondary text-white">خريطة المباني</div>
                 <div class="card-body">
-                    <div id="map" style="height: 400px;">
-                    </div>
+                    <div id="map" style="height: 400px;"></div>
                 </div>
             </div>
         </div>
@@ -54,12 +55,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if($buildings->isEmpty())
-    <div class="alert alert-warning">
-        لا توجد بيانات! تم إنشاء بيانات تجريبية تلقائياً. يرجى تحديث الصفحة.
-    </div>
-@else
- @forelse($buildings as $building)
+                        @forelse($buildings as $building)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $building->name }}</td>
@@ -80,8 +76,6 @@
                             <td colspan="7" class="text-center">لا توجد مباني مسجلة</td>
                         </tr>
                         @endforelse
-@endif
-
                     </tbody>
                 </table>
             </div>
@@ -91,26 +85,14 @@
 
 @push('scripts')
 <script>
-    // Initialize the map
     var map = L.map('map').setView([24.7136, 46.6753], 12); // مركز الرياض
 
-    // Add OpenStreetMap tiles
-    @foreach($buildings as $building)
-    L.marker([{{ $building->latitude }}, {{ $building->longitude }}]) // استخدم الحقول مباشرة
-        .addTo(map)
-        .bindPopup("<b>{{ $building->name }}</b>");
-@endforeach
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-    // Add building markers
     @foreach($buildings as $building)
-        @php
-            // تحويل موقع النص إلى مصفوفة
-            $location = explode(',', $building->location);
-            $lat = trim($location[0] ?? 0);
-            $lng = trim($location[1] ?? 0);
-        @endphp
-
-        L.marker([{{ $lat }}, {{ $lng }}])
+        L.marker([{{ $building->latitude }}, {{ $building->longitude }}])
             .addTo(map)
             .bindPopup("<b>{{ $building->name }}</b><br>طوابق: {{ $building->details->floors ?? 'N/A' }}");
     @endforeach

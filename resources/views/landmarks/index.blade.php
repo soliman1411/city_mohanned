@@ -29,19 +29,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($landmarks as $index => $landmark)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $landmark->name }}</td>
-                    <td>{{ $landmark->type }}</td>
-                    <td>
-                      @php
-    $coordinates = explode(',', $landmark->location);
-    $lat = trim($coordinates[0]);
-    $lng = trim($coordinates[1]);
-@endphp
+               @foreach($landmarks as $index => $landmark)
+<tr>
+    <td>{{ $index + 1 }}</td>
+    <td>{{ $landmark->name }}</td>
+    <td>{{ $landmark->type }}</td>
+    <td>
+        Lat: {{ $landmark->latitude }}<br>
+        Lng: {{ $landmark->longitude }}
+    </td>
 
-{{ $lat }}, {{ $lng }}
+
                     </td>
                     <td>{{ Str::limit($landmark->description, 50) }}</td>
                     <td>

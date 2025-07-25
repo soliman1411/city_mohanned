@@ -32,16 +32,18 @@ class BuildingController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'land_id' => 'required|exists:lands,id',
-            'floors' => 'required|integer|min:1',
-            'area' => 'required|numeric|min:0',
-            'purpose' => 'nullable',
-            'description' => 'nullable',
-        ]);
+       $validated = $request->validate([
+    'name' => 'required',
+    'latitude' => 'required|numeric',
+    'longitude' => 'required|numeric',
+    'land_id' => 'required|exists:lands,id',
+    'floors' => 'required|integer|min:1',
+    'area' => 'required|numeric|min:0',
+    'purpose' => 'nullable|string',
+    'description' => 'nullable|string',
+]);
+
+
 
         DB::transaction(function () use ($validated) {
             $building = Building::create([

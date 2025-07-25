@@ -15,8 +15,9 @@ return new class extends Migration
             // إحداثيات المكان
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);
+$table->foreignId('land_id')->constrained('lands')->onDelete('cascade');
 
-            $table->unsignedBigInteger('land_id')->constrained()->onDelete('cascade');
+           // $table->unsignedBigInteger('land_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
